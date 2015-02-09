@@ -18,14 +18,14 @@ go version of cmdline-fu
 ## Example
 
     go-cmdline-fu browse
-    go-cmdline-fu using find
+    go-cmdline-fu using grep
     go-cmdline-fu by USER
-    go-cmdline-fu matching find
+    go-cmdline-fu matching find 2
 
 ## Abbreviation
     you can abbreviate COMMAND
 
     go-cmdline-fu br
-    go-cmdline-fu u find
+    go-cmdline-fu u grep
     go-cmdline-fu by USER
-    go-cmdline-fu m find
+    go-cmdline-fu m find 2
