@@ -31,11 +31,9 @@ func colorize(s string, color Color) string {
 
 func colorizeMatch(s, word string) string {
 	r, _ := regexp.Compile(word)
-	return r.ReplaceAllStringFunc(s, _colorizeMatch)
-}
-
-func _colorizeMatch(s string) string {
-	return colorize(s, Yellow)
+	return r.ReplaceAllStringFunc(s, func(ms string) string {
+		return colorize(ms, Yellow)
+	})
 }
 
 func setColor(s, search string) string {
@@ -125,10 +123,10 @@ func (fu *Fu) commandPart() string {
 
 func (fu *Fu) url() string {
 	// api_url = "http://www.commandlinefu.com/commands/<command-set>/<format>/"
-	api_url := "http://www.commandlinefu.com/commands/%s/%s/%d"
-	command := fu.commandPart()
 	page_idx := (fu.page - 1) * 25
-	return fmt.Sprintf(api_url, command, fu.format, page_idx)
+	return fmt.Sprintf(
+		"http://www.commandlinefu.com/commands/%s/%s/%d",
+		fu.commandPart(), fu.format, page_idx)
 }
 
 func help(name string) {
@@ -142,7 +140,7 @@ func help(name string) {
   # Example
 
     %s browse
-    %s using find
+    %s using grep
     %s by USER
     %s matching find
 
@@ -150,9 +148,10 @@ func help(name string) {
     you can abbreviate COMMAND
 
     %s br
-    %s u find 2
+    %s u grep 2
     %s by USER
     %s m find
+
 `
 
 	r, _ := regexp.Compile("%s")
@@ -179,6 +178,7 @@ func main() {
 		help(ProgramName)
 		os.Exit(0)
 	}
+
 	command := OtherArgs[0]
 	OtherArgs = OtherArgs[1:] // shift
 
