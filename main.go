@@ -131,22 +131,11 @@ func (fu *Fu) url() string {
 	return fmt.Sprintf(api_url, command, fu.format, page_idx)
 }
 
-func NewFu(config interface{}) *Fu {
-	return &defaultConfig
-}
-
-var defaultConfig = Fu{
-	page:    0,
-	format:  "plaintext",
-	command: "browse",
-	search:  "",
-}
-
 func help(name string) {
 	s := `# Usage
 
     %s COMMAND [PAGE]
-    
+
       COMMAND: browse, using WORD, by USER, matching WORD
       PAGE: 1-999 (defaut: 1)
 
@@ -184,17 +173,14 @@ func parsePage(s string) int {
 }
 
 func main() {
-	// pageNumber := flag.Int("page", 1, "page number")
-	// flag.Parse()
-	// fmt.Println(*pageNumber)
 	ProgramName := os.Args[0]
-	// var commands = []string{"browse", "using", "by", "matching"}
 	OtherArgs := os.Args[1:]
 	if len(OtherArgs) < 1 {
 		help(ProgramName)
 		os.Exit(0)
 	}
 	command := OtherArgs[0]
+	OtherArgs = OtherArgs[1:] // shift
 
 	if val, ok := abbrevTable[command]; ok {
 		command = val
@@ -205,17 +191,21 @@ func main() {
 
 	search := ""
 	page := 1
+
 	switch command {
 	case "using", "by", "matching":
-		search = OtherArgs[1]
-		if len(OtherArgs) > 2 {
-			page = parsePage(OtherArgs[2])
+		if len(OtherArgs) == 0 {
+			help(ProgramName)
+			os.Exit(0)
 		}
+		search = OtherArgs[0]
+		OtherArgs = OtherArgs[1:] // shift
 	default:
 		search = ""
-		if len(OtherArgs) > 1 {
-			page = parsePage(OtherArgs[1])
-		}
+	}
+
+	if len(OtherArgs) > 0 {
+		page = parsePage(OtherArgs[0])
 	}
 
 	fu := &Fu{
