@@ -2,6 +2,12 @@
 Now development
 go version of cmdline-fu
 
+## Install
+    go get github.com/t9md/go-cmdline-fu
+
+## Update
+    go get -u github.com/t9md/go-cmdline-fu
+
 ## Usage
 
     go-cmdline-fu COMMAND [PAGE]
