@@ -98,11 +98,20 @@ func (fu *Fu) result() string {
 	}
 	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
-	lines := strings.Split(string(body), "\n\n")
-	for i, line := range lines {
-		lines[i] = setColor(line, fu.search)
-	}
+
+	lines := Map(
+		strings.Split(string(body), "\n\n"), func(v string) string {
+			return setColor(v, fu.search)
+		})
 	return string(strings.Join(lines, "\n\n")) + colorize("Page: ", Magenta) + fmt.Sprintf("%2d", fu.page)
+}
+
+func Map(vs []string, f func(string) string) []string {
+	vsm := make([]string, len(vs))
+	for i, v := range vs {
+		vsm[i] = f(v)
+	}
+	return vsm
 }
 
 func (fu *Fu) commandPart() string {
