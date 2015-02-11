@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/base64"
-	// "flag"
 	"fmt"
 	"io/ioutil"
 	"net/http"
